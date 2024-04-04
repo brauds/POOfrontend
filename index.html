@@ -7,24 +7,88 @@
 
   <title>Catracas EtecZL</title>
 
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="./css/gui.css"></link>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   
-  <script type="module">
-    import { appInstance } from "./ts/App.ts";
-    window.app = appInstance;
 
-    window.addEventListener("load", ()=>{
-      alert("asdf")            
-      window.app.guiCtrl.buildGui();
-    })
-  </script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+
+  import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAEwj7m1dQsFG3vSPVSNvZ6PVwAgzt8wxc",
+    authDomain: "fireoo-337c2.firebaseapp.com",
+    projectId: "fireoo-337c2",
+    storageBucket: "fireoo-337c2.appspot.com",
+    messagingSenderId: "370901066773",
+    appId: "1:370901066773:web:16e1fac7e26f81783bda1c"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+window.fbApp = initializeApp(firebaseConfig);
+window.fbAuth = getAuth(window.fbApp);
+console.log(window.fbApp);
+console.log(window.fbAuth);
+
+let login = (emailDoUsuario, senhaDoUsuario)=>{
+  signInWithEmailAndPassword(window.fbAuth, emailDoUsuario, senhaDoUsuario)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+}
+
+window.registrarNovoUsuario = (emailDoUsuario, senhaDoUsuario) => {
+  console.log("funcao registrar novo usuario rodou!!!");
+createUserWithEmailAndPassword(window.fbAuth, emailDoUsuario, senhaDoUsuario)
+  .then((userCredential) => {
+    console.log("Usuario registrado com sucesso!!")
+    console.log(userCredential);
+    window.userLogado = userCredential.user;
+  })
+  .catch((error) => {
+    console.log("Erro ao criar novo o usuario no firebase")
+    console.log(error)
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+</script>
+
+<script type="module">
+  import { appInstance } from "./ts/App.ts";
+  window.app = appInstance;
+
+  window.addEventListener("load", ()=>{
+    alert("asdf")            
+    window.app.guiCtrl.buildGui();
+  })
+  
+  document.getElementById("registrarusuario").addEventListener("click", window.registrarNovoUsuario);
+</script>
+
   </head>
 
 <body>
+  <button type="button" id="registrarusuario">Registrar</button>
   <nav class="navbar navbar-light bg-light">
     <button id="btnToggleDrawer" class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
